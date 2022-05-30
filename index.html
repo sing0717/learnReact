@@ -1,40 +1,47 @@
 <!DOCTYPE html>
-<head>
+<html>
+  <head>
     <title>Document</title>
- </head>
-    <body>
-        <div id="root"></div>
-    </body>
- <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
- <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
- <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
- <script type="text/babel">
-
-   function Btn({text,big}){
-
-     return <button style={{
-        backgroundColor: "tomato",
-        color:"white",
-        padding:"10px 20px",
-        border:0,
-        borderRadius: 10,
-        fontSize: big ? 18 : 15,
-     }}>{text}
-     </button>;
-   }
-
-
-   function  App(){ 
-      return (            
-         <div>
-               <Btn text="Save Changes" big="true"/>
-               <Btn text="Continue"/>
-         </div>
-        );
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script type="text/babel">
+    function Btn({ text, fontSize = 14 }) {
+      return (
+        <button
+          style={{
+            backgroundColor: "tomato",
+            color: "white",
+            padding: "10px 20px",
+            border: 0,
+            borderRadius: 10,
+            fontSize: fontSize,
+          }}
+        >
+          {text}
+        </button>
+      );
     }
-    
 
-   const root = document.getElementById("root");
-   ReactDOM.render(<App/>, root);
- </script>
+    Btn.propTypes = {
+      text: PropTypes.string.isRequired,
+      fontSize: PropTypes.number,
+    };
+    function App() {
+      return (
+        <div>
+          <Btn text="Save Chages" fontSize={18} />
+          <Btn text={"Continue"} />
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
 </html>
