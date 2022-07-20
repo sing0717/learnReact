@@ -1,34 +1,52 @@
 import { useState, useEffect } from "react";
 
 function App() {
-  const [toDo, setToDo] = useState("");
-  const [toDos, setToDos] = useState([]);
-  const onChange = (event) => setToDo(event.target.value);
-  const onSubmit = (event) => {
-    event.preventDefault();
-    if (toDo === "") {
-      return;
-    }
-    setToDos((currentArray) => [toDo, ...currentArray]);
-    setToDo("");
+  const [loading, setLoading] = useState(true);
+  const [coins, setCoins] = useState([]);
+  const [coinValue, setCoinValue] = useState(0);
+  const [invest, setInvest] = useState(0);
+
+  const boxChange = (value) => {
+    setCoinValue(value.target.value);
   };
-  console.log(toDos);
+
+  const inputChange = (value) => {
+    setInvest(value.target.value * coinValue);
+  };
+
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers")
+      .then((response) => response.json())
+      .then((json) => {
+        setCoins(json);
+        setLoading(false);
+        setCoinValue(json[0].quotes.USD.price);
+      });
+  }, []);
+
   return (
     <div>
-      <h1>MY To Dos ({toDos.length})</h1>
-      <form onSubmit={onSubmit}>
+      <h1>The Coins! ({coins.length})</h1>
+      {loading ? <strong>Loading...</strong> : null}
+      <select onChange={boxChange}>
+        {coins.map((coin) => (
+          <option value={coin.quotes.USD.price}>
+            {coin.name} ({coin.symbol}) : ${coin.quotes.USD.price}
+            USD
+          </option>
+        ))}
+      </select>
+      <div>
+        USD
         <input
-          onChange={onChange}
-          value={toDo}
-          type="text"
-          placeholder="Write your to do..."
+          size="66"
+          onChange={inputChange}
+          placeholder="how much dollar YOU have?"
         />
-        <button>Add To Do</button>
-      </form>
-      <hr />
-      {toDos.map((toDo, index) => (
-        <li key={index}>{toDo}</li>
-      ))}
+        <div>
+          <input size="66" placeholder={invest} readOnly />
+        </div>
+      </div>
     </div>
   );
 }
